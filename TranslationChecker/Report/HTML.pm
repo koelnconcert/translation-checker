@@ -49,7 +49,7 @@ sub format_stats {
 
 sub format_stat {
   my ($title, $report, $link) = @_;
-  my $count = TranslationChecker::Report::count_by_status($report);
+  my $count = TranslationChecker::Report::count_messages_by_status($report);
   my @status = qw/missing outdated orphaned current/;
   return 
     wrap("td", "filename", defined $link ? qq{<a href="$link">$title</a} : $title),

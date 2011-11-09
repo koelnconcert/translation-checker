@@ -25,22 +25,32 @@ sub generate {
   return \%report;
 }
 
-sub group_by_status {
-  my ($report) = @_;
-
-  my $messages = $report->{messages}; 
-  my %status = map { $_->{status} => 1 } @$messages;
-  for my $status (keys %status) {
-    my @list = grep { $_->{status} eq $status } @$messages;
-    $status{$status} = \@list;
-  }
- 
-  return \%status;
+sub group_reports_by_lang {
+  my (@reports) = @_;
+  return group_array_of_hashes_by_value("lang", @reports);
 }
 
-sub count_by_status {
+sub group_messages_by_status {
   my ($report) = @_;
-  my $messages = group_by_status($report);
+  return group_array_of_hashes_by_value("status", @{$report->{messages}});
+}
+
+sub group_array_of_hashes_by_value {
+  my ($key, @hashes) = @_;
+  my %values = map { $_->{$key} => 1 } @hashes;
+  my %hash;
+  for my $value (keys %values) {
+    my @list = grep { $_->{$key} eq $value } @hashes;
+    $hash{$value} = \@list;
+  }
+  return \%hash;
+}
+
+
+
+sub count_messages_by_status {
+  my ($report) = @_;
+  my $messages = group_messages_by_status($report);
   my @status = qw/missing outdated orphaned current/;
   my %count = map { my $group = $messages->{$_} || []; $_ => scalar @$group  } @status;
   return \%count;
