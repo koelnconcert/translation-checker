@@ -42,15 +42,17 @@ sub format_stats {
   return 
     wrap("tr", undef, map { wrap("th", undef, $_) } @columns),
     wrap("tr", "total", format_stat("total ($total_report->{lang})", $total_report)),
-    (map { wrap("tr", undef, format_stat($_->{trans_filename}, $_)) } @reports);
+    (map { wrap("tr", undef, 
+       format_stat($_->{trans_filename}, $_, "#".$_->{trans_filename})) } @reports
+    );
 }
 
 sub format_stat {
-  my ($title, $report) = @_;
+  my ($title, $report, $link) = @_;
   my $count = TranslationChecker::Report::count_by_status($report);
   my @status = qw/missing outdated orphaned current/;
   return 
-    wrap("td", "filename", $title),
+    wrap("td", "filename", defined $link ? qq{<a href="$link">$title</a} : $title),
     wrap("td", "graph", format_graph($count)),
     (map { wrap("td", "status $_", $count->{$_}) } @status);
 }
@@ -76,6 +78,7 @@ sub format_file {
   my @messages = sort { $a->{key} cmp $b->{key} } @$messages; 
 
   wrap("div", "file",
+    qq[<a name="$report->{trans_filename}"/>],
     wrap("div", "info",
       make_span("lang", $report),
       make_span("orig_filename", $report),
