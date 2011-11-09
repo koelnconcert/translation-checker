@@ -11,6 +11,15 @@ sub format {
   my (@reports) = @_;
 
   return join "\n",
+    wrap_body(
+      format_stats(@reports),
+      format_files(@reports),
+    );
+}
+
+sub wrap_body {
+  my (@body) = @_;
+  return
     wrap("html", undef, 
       wrap("head", undef,
         q{<link rel="stylesheet" type="text/css" href="report.css"/>},
@@ -19,17 +28,7 @@ sub format {
       wrap("body", undef,
         wrap("div", "report",
           wrap("h1", undef, "Language-Report"),
-          wrap("div", "stats",
-            wrap("h2", undef, "Overview"),
-            wrap("table", "stats",
-              format_stats(@reports)
-            ),
-          ),
-          wrap("div", "files",
-            wrap("h2", undef, "Files"),
-            q{<a href="#" onclick="$('div.message.current').toggle(); return false">Toggle all/non-current messages</a>},
-            map({format_file($_)} @reports)
-          )
+          @body
         )
       )
     );
@@ -40,10 +39,16 @@ sub format_stats {
   my $total_report = TranslationChecker::Report::congregate_reports(@reports);
   my @columns = qw{file/lang percentages missing outdated orphaned current};
   return 
-    wrap("tr", undef, map { wrap("th", undef, $_) } @columns),
-    wrap("tr", "total", format_stat("total ($total_report->{lang})", $total_report)),
-    (map { wrap("tr", undef, 
-       format_stat($_->{trans_filename}, $_, "#".$_->{trans_filename})) } @reports
+    wrap("div", "stats",
+      wrap("h2", undef, "Overview"),
+      wrap("table", "stats",
+        wrap("tr", undef, map { wrap("th", undef, $_) } @columns),
+        wrap("tr", "total", 
+             format_stat("total ($total_report->{lang})", $total_report)),
+        (map { wrap("tr", undef, 
+          format_stat($_->{trans_filename}, $_, "#".$_->{trans_filename})) } @reports
+        ),
+      ),
     );
 }
 
@@ -69,6 +74,15 @@ sub format_graph {
     wrap("div", "graph",
       map { qq[<span class="status $_" title="$_" style="width:$percentages{$_}%">&nbsp;</span>] } @status
     );
+}
+
+sub format_files {
+  my (@reports) = @_;
+  wrap("div", "files",
+    wrap("h2", undef, "Files"),
+    q{<a href="#" onclick="$('div.message.current').toggle(); return false">Toggle all/non-current messages</a>},
+    map({format_file($_)} @reports)
+  );
 }
 
 sub format_file {
