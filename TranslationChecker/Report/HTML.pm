@@ -35,37 +35,36 @@ sub format {
     );
 }
 
-sub format_graph {
-  my ($report) = @_;
+sub format_stats {
+  my (@reports) = @_;
+  my @columns = qw{file/lang percentages missing outdated orphaned current};
+  return 
+    wrap("tr", undef, map { wrap("th", undef, $_) } @columns),
+    map { wrap("tr", undef, format_stat($_->{trans_filename}, $_)) } @reports;
+}
+
+sub format_stat {
+  my ($title, $report) = @_;
   my $count = TranslationChecker::Report::count_by_status($report);
+  my @status = qw/missing outdated orphaned current/;
+  return 
+    wrap("td", "filename", $title),
+    wrap("td", "graph", format_graph($count)),
+    (map { wrap("td", "status $_", $count->{$_}) } @status);
+}
+
+sub format_graph {
+  my ($count) = @_;
   my @status = qw/missing outdated orphaned current/;
   my $sum = sum values %$count;
 
   return "division by zero" if $sum == 0;
   my %percentages = map { $_ => 100 * $count->{$_} / $sum } @status;
 
-  return 
-    wrap("div", "graph", 
+  return
+    wrap("div", "graph",
       map { qq[<span class="status $_" title="$_" style="width:$percentages{$_}%">&nbsp;</span>] } @status
     );
-}
-
-sub format_stats {
-  my (@reports) = @_;
-  my @columns = qw{file/lang percentages missing outdated orphaned current};
-  return 
-    wrap("tr", undef, map { wrap("th", undef, $_) } @columns),
-    map { wrap("tr", undef, format_stat($_)) } @reports;
-}
-
-sub format_stat {
-  my ($report) = @_;
-  my $count = TranslationChecker::Report::count_by_status($report);
-  my @status = qw/missing outdated orphaned current/;
-  return 
-    wrap("td", "filename", $report->{trans_filename}),
-    wrap("td", "graph", format_graph($report)),
-    (map { wrap("td", "status $_", $count->{$_}) } @status);
 }
 
 sub format_file {
