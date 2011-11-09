@@ -68,11 +68,16 @@ sub format_stats {
     wrap("div", "stats",
       wrap("h2", undef, "Overview"),
       wrap("table", "stats",
-        wrap("tr", undef, map { wrap("th", undef, $_) } @columns),
-        wrap("tr", "total", 
-             format_stat("total", $total_report)),
-        (map { wrap("tr", undef, 
-          format_stat(&$title_sub($_), $_, "#".$_->{trans_filename})) } @reports
+        wrap("thead", undef, 
+          wrap("tr", undef, map { wrap("th", undef, $_) } @columns)
+        ),
+        wrap("tbody", undef,
+          (map { wrap("tr", undef, 
+            format_stat(&$title_sub($_), $_, "#".$_->{trans_filename})) } @reports
+          ),
+        ),
+        wrap("tfoot", undef,
+          wrap("tr", "total", format_stat("total", $total_report)),
         ),
       ),
     );
