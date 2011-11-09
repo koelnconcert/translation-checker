@@ -1,0 +1,95 @@
+table.stats td.status {
+  width: 70px;
+  text-align: right;
+  padding: 2px;
+}
+
+table.stats th {
+  font-weight: normal;
+  font-size: small;
+  text-align: left;
+}
+
+table.stats td.graph
+/*, table.stats td.filename*/
+
+ {
+  width: 99%;
+}
+
+
+table.graph {
+  border-spacing: 0px;
+}
+
+.file {
+  clear: both;
+}
+
+.info * {
+  background-color: grey;
+  color: white;
+}
+
+span.lang, span.status {
+  text-align: center;
+  width: 10%;
+}
+
+.orig_filename, .trans_filename, span.orig, span.trans {
+  width: 40%;
+}
+
+div.message {
+  margin-bottom: 1ex;
+  clear: both;
+}
+
+div.message > span, .info > span {
+  float: left;
+  margin: 2px;
+  padding: 2px;
+}
+
+span.status {
+  height: 50px;
+}
+
+span.key {
+  width: 80%;
+  background: lightgrey;
+}
+
+span.orig span {
+  display: block;
+}  
+
+span.orig_old {
+  color: grey;
+  display: none !important;
+}
+
+.orig_old, .orig, .trans {
+  font-family: monospace;
+}
+
+div.message.outdated span.orig_old {
+  display: block !important;
+}
+
+.status.current {
+  background-color: lightgreen;
+}
+
+.status.missing {
+  background-color: lightcoral;
+}
+
+.status.orphaned {
+  background-color: lightblue;
+}
+
+.status.outdated {
+  background-color: orange;
+}
+
