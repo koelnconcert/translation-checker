@@ -10,16 +10,18 @@ table.stats th {
   text-align: left;
 }
 
-table.stats td.graph
-/*, table.stats td.filename*/
-
- {
-  width: 99%;
+td.graph {
+  width: 100%;
+  padding-left: 20px;
+  padding-right: 20px;
 }
 
+td.filename {
+  white-space: nowrap;
+}
 
-table.graph {
-  border-spacing: 0px;
+div.graph span {
+  float: left;
 }
 
 .file {
@@ -51,7 +53,7 @@ div.message > span, .info > span {
   padding: 2px;
 }
 
-span.status {
+div.message span.status {
   height: 50px;
 }
 

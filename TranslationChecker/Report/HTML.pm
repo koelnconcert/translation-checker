@@ -45,11 +45,8 @@ sub format_graph {
   my %percentages = map { $_ => 100 * $count->{$_} / $sum } @status;
 
   return 
-    wrap("table", "graph", 
-      wrap("tr", undef,
-        '<td>&nbsp;</td>',
-        map { qq[<td class="status $_" title="$_" style="width:$percentages{$_}%"></td>] } @status
-      )
+    wrap("div", "graph", 
+      map { qq[<span class="status $_" title="$_" style="width:$percentages{$_}%">&nbsp;</span>] } @status
     );
 }
 
