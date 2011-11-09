@@ -22,6 +22,10 @@ td.filename {
   white-space: nowrap;
 }
 
+tr.total td{
+  font-weight: bold;
+}
+
 div.graph span {
   float: left;
 }

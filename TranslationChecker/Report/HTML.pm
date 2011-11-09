@@ -37,10 +37,12 @@ sub format {
 
 sub format_stats {
   my (@reports) = @_;
+  my $total_report = TranslationChecker::Report::congregate_reports(@reports);
   my @columns = qw{file/lang percentages missing outdated orphaned current};
   return 
     wrap("tr", undef, map { wrap("th", undef, $_) } @columns),
-    map { wrap("tr", undef, format_stat($_->{trans_filename}, $_)) } @reports;
+    wrap("tr", "total", format_stat("total ($total_report->{lang})", $total_report)),
+    (map { wrap("tr", undef, format_stat($_->{trans_filename}, $_)) } @reports);
 }
 
 sub format_stat {

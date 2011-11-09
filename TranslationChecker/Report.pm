@@ -6,7 +6,6 @@ use feature qw(say);
 use Data::Dumper;
 use Git::Wrapper;
 
-
 sub generate {
   my ($orig_filename, $lang) = @_;
   my $trans_filename = build_trans_filename($orig_filename, $lang);
@@ -45,6 +44,24 @@ sub count_by_status {
   my @status = qw/missing outdated orphaned current/;
   my %count = map { my $group = $messages->{$_} || []; $_ => scalar @$group  } @status;
   return \%count;
+}
+
+sub congregate_reports {
+  my (@reports) = @_;
+  my @messages = map { @{$_->{messages}} } @reports;
+  my $report = {
+     orig_filename => join_hash_values("orig_filename", @reports),
+     trans_filename => join_hash_values("trans_filename", @reports),
+     lang => join_hash_values("lang", @reports),
+     messages => \@messages
+  };
+  return $report; 
+}
+
+sub join_hash_values {
+  my ($key, @hashes) = @_;
+  my %values = map { $_->{$key} => 1} @hashes;
+  return join " ", sort keys %values;
 }
 
 sub build_trans_filename {
