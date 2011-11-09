@@ -52,7 +52,7 @@ sub format_graph {
 
 sub format_stats {
   my (@reports) = @_;
-  my @columns = ("", "", qw/missing outdated orphaned current/);
+  my @columns = qw{file/lang percentages missing outdated orphaned current};
   return 
     wrap("tr", undef, map { wrap("th", undef, $_) } @columns),
     map { wrap("tr", undef, format_stat($_)) } @reports;
