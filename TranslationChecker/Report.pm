@@ -117,6 +117,7 @@ sub get_old_revision {
   my ($trans_filename, $orig_filename) = @_;
   my $git = Git::Wrapper->new(".");
   my @revisions = $git->rev_list(qw/-n 1 HEAD --/, $trans_filename);
+  return "" if scalar @revisions == 0;
   $git->show("$revisions[0]:$orig_filename"); 
 }
 
