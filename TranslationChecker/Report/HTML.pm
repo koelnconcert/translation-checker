@@ -10,7 +10,7 @@ use List::Util qw(sum);
 sub format {
   my (@reports) = @_;
 
-  say join "\n",
+  return join "\n",
     wrap("html", undef, 
       wrap("head", undef,
         q{<link rel="stylesheet" type="text/css" href="report.css"/>},
