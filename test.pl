@@ -22,18 +22,23 @@ sub write_reports {
   my ($outdir, @files) = @_;
   my @lang = get_available_languages(@files);
 
-#  my %reports;
+  my @all_reports;
   for my $lang (@lang) {
     say STDERR "generating report for $lang";
 
     my @reports = map { TranslationChecker::Report::generate($_, $lang) } @files;
     my $html = TranslationChecker::Report::HTML::format(@reports);
-    
     my $file = "$outdir/report_$lang.html";
     blurt($html, $file);
     
-    #$reports{$lang} = \@reports;
+    push @all_reports, @reports;
   }
+
+  say STDERR "generating overview";
+  my $html = TranslationChecker::Report::HTML::format_by_lang(@all_reports);
+  my $file = "$outdir/report.html";
+  blurt($html, $file);
+  
 }
 
 sub main {

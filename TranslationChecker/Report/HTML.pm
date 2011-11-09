@@ -12,8 +12,20 @@ sub format {
 
   return join "\n",
     wrap_body(
-      format_stats(@reports),
+      format_stats(\&stats_title_file_formatter, @reports),
       format_files(@reports),
+    );
+}
+
+sub format_by_lang {
+  my (@reports) = @_;
+
+  my $grouped = TranslationChecker::Report::group_reports_by_lang(@reports);
+  @reports = map { TranslationChecker::Report::congregate_reports(@$_) } values %$grouped;
+
+  return join "\n",
+    wrap_body(
+      format_stats(\&stats_title_lang_formatter, @reports),
     );
 }
 
@@ -34,8 +46,22 @@ sub wrap_body {
     );
 }
 
+sub stats_title_file_formatter {
+  my ($report) = @_;
+  my $title = $report->{orig_filename};
+  return qq{<a href="#$title">$title</a};
+}
+
+sub stats_title_lang_formatter {
+  my ($report) = @_;
+  my $lang = $report->{lang};
+  return qq{<a href="report_$lang.html">$lang</a};
+}
+
+
+
 sub format_stats {
-  my (@reports) = @_;
+  my ($title_sub, @reports) = @_;
   my $total_report = TranslationChecker::Report::congregate_reports(@reports);
   my @columns = qw{file/lang percentages missing outdated orphaned current};
   return 
@@ -44,20 +70,20 @@ sub format_stats {
       wrap("table", "stats",
         wrap("tr", undef, map { wrap("th", undef, $_) } @columns),
         wrap("tr", "total", 
-             format_stat("total ($total_report->{lang})", $total_report)),
+             format_stat("total", $total_report)),
         (map { wrap("tr", undef, 
-          format_stat($_->{trans_filename}, $_, "#".$_->{trans_filename})) } @reports
+          format_stat(&$title_sub($_), $_, "#".$_->{trans_filename})) } @reports
         ),
       ),
     );
 }
 
 sub format_stat {
-  my ($title, $report, $link) = @_;
+  my ($title, $report) = @_;
   my $count = TranslationChecker::Report::count_messages_by_status($report);
   my @status = qw/missing outdated orphaned current/;
   return 
-    wrap("td", "filename", defined $link ? qq{<a href="$link">$title</a} : $title),
+    wrap("td", "filename", $title),
     wrap("td", "graph", format_graph($count)),
     (map { wrap("td", "status $_", $count->{$_}) } @status);
 }
