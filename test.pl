@@ -15,7 +15,7 @@ sub get_available_languages {
   @files = map { bsd_glob($_) } @files;
   @files = map { s/.*_(\w+)\.properties$/$1/; $_ } @files;
   my %files = map { $_ => 1 } @files;
-  @files = keys %files;
+  return keys %files;
 }
 
 sub write_reports {
@@ -23,7 +23,7 @@ sub write_reports {
   my @lang = get_available_languages(@files);
 
   my @all_reports;
-  for my $lang (@lang) {
+  for my $lang (sort @lang) {
     say STDERR "generating report for $lang";
 
     my @reports = map { TranslationChecker::Report::generate($_, $lang) } @files;

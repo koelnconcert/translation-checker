@@ -21,7 +21,8 @@ sub format_by_lang {
   my (@reports) = @_;
 
   my $grouped = TranslationChecker::Report::group_reports_by_lang(@reports);
-  @reports = map { TranslationChecker::Report::congregate_reports(@$_) } values %$grouped;
+  my @values = map { $grouped->{$_} } sort keys %$grouped;
+  @reports = map { TranslationChecker::Report::congregate_reports(@$_) } values @values;
 
   return join "\n",
     wrap_body(
