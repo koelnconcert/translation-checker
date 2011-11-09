@@ -8,6 +8,8 @@ use TranslationChecker::Report::Text;
 use Data::Dumper;
 use File::Glob ':glob';
 use Sysadm::Install qw(blurt);
+use Pod::Usage;
+use Getopt::Std;
 
 sub get_available_languages {
   my (@files) = @_;
@@ -42,10 +44,23 @@ sub write_reports {
 }
 
 sub main {
+  my %opts;
+  getopts("o:", \%opts) or pod2usage();
+  my $outdir = $opts{o} or pod2usage("parameter 'o' required");
   my @files = @ARGV;
-  my $outdir = "/home/peterss/tmp/translation/html";
 
   write_reports($outdir, @files);
 }
 
 main();
+
+__END__
+
+=head1 NAME
+ 
+  translation-checker
+
+=head1 SYNOPSIS
+  
+  translation-checker -o <outdir> <files>...
+
