@@ -15,7 +15,9 @@
         <include name="**/*.pm"/>
       </fileset>
     </copy>
+    <copy file="report.css" todir="${build.dir}/share/${name}"/>
     <copy file="translation-checker.pl" tofile="${build.dir}/bin/${name}"/>
+    <replace file="${build.dir}/bin/${name}" token="#REPORT.CSS#" value="${install.dir}/share/${name}/report.css"/>
   </target>
 
   <target name="install" depends="build">

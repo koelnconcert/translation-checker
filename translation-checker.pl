@@ -7,7 +7,7 @@ use TranslationChecker::Report::HTML;
 use TranslationChecker::Report::Text;
 use Data::Dumper;
 use File::Glob ':glob';
-use Sysadm::Install qw(blurt);
+use Sysadm::Install qw(blurt cp);
 use Pod::Usage;
 use Getopt::Std;
 
@@ -40,7 +40,8 @@ sub write_reports {
   my $html = TranslationChecker::Report::HTML::format_by_lang(@all_reports);
   my $file = "$outdir/index.html";
   blurt($html, $file);
-  
+
+  cp("#REPORT.CSS#", "$outdir/report.css");
 }
 
 sub main {
