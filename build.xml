@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<project name="translation-checker" basedir="." default="build">
+  <property name="name" value="translation-checker"/>
+  <property name="install.dir" value="/usr/local"/>
+  <property name="build.dir" value="build"/>
+ 
+  <target name="clean">
+    <delete dir="${build.dir}"/>
+  </target>
+
+  <target name="build" depends="clean">
+    <mkdir dir="${build.dir}"/>
+    <copy todir="${build.dir}/lib/site_perl">
+      <fileset dir=".">
+        <include name="**/*.pm"/>
+      </fileset>
+    </copy>
+    <copy file="translation-checker.pl" tofile="${build.dir}/bin/${name}"/>
+  </target>
+
+  <target name="install" depends="build">
+    <copy todir="${install.dir}">
+      <fileset dir="${build.dir}"/>
+    </copy>
+  </target> 
+
+</project>
