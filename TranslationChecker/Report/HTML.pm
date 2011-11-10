@@ -5,6 +5,7 @@ use warnings;
 use feature qw(say);
 use Data::Dumper;
 use HTML::Entities;
+use Digest::SHA qw(sha1_hex);
 use List::Util qw(sum);
 
 sub format {
@@ -52,8 +53,9 @@ sub wrap_body {
 
 sub stats_title_file_formatter {
   my ($report) = @_;
-  my $title = $report->{orig_filename};
-  return qq{<a href="#$title">$title</a>};
+  my $file = $report->{trans_filename};
+  my $anchor = sha1_hex($file);
+  return qq{<a href="#$anchor">$file</a>};
 }
 
 sub stats_title_lang_formatter {
@@ -122,10 +124,12 @@ sub format_file {
   my ($report) = @_;
  
   my $messages = $report->{messages}; 
-  my @messages = sort { $a->{key} cmp $b->{key} } @$messages; 
+  my @messages = sort { $a->{key} cmp $b->{key} } @$messages;
+
+  my $anchor = sha1_hex($report->{trans_filename});
 
   wrap("div", "file",
-    qq[<a name="$report->{trans_filename}"/>],
+    qq[<a name="$anchor"/>],
     wrap("div", "info",
       make_span("lang", $report),
       make_span("orig_filename", $report),
