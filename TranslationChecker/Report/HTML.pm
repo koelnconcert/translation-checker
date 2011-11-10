@@ -61,7 +61,7 @@ sub stats_title_file_formatter {
 sub stats_title_lang_formatter {
   my ($report) = @_;
   my $lang = $report->{lang};
-  return qq{<a href="report_$lang.html">$lang</a>};
+  return qq{<a href="$lang.html">$lang</a>};
 }
 
 sub format_stats {

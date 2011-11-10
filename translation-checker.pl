@@ -30,7 +30,7 @@ sub write_reports {
 
     my @reports = map { TranslationChecker::Report::generate($_, $lang) } @files;
     my $html = TranslationChecker::Report::HTML::format(@reports);
-    my $file = "$outdir/report_$lang.html";
+    my $file = "$outdir/$lang.html";
     blurt($html, $file);
     
     push @all_reports, @reports;
@@ -38,7 +38,7 @@ sub write_reports {
 
   say STDERR "generating overview";
   my $html = TranslationChecker::Report::HTML::format_by_lang(@all_reports);
-  my $file = "$outdir/report.html";
+  my $file = "$outdir/index.html";
   blurt($html, $file);
   
 }
