@@ -33,8 +33,11 @@ sub format_by_lang {
 sub wrap_body {
   my (@body) = @_;
   return
-    wrap("html", undef, 
+    q{<?xml version="1.0" encoding="UTF-8" ?>},
+    q{<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">},
+    q{<html xmlns="http://www.w3.org/1999/xhtml">},
       wrap("head", undef,
+        wrap("title", undef, "Translation Report"),
         q{<link rel="stylesheet" type="text/css" href="report.css"/>},
         q{<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.min.js"></script>},
       ),
@@ -43,23 +46,21 @@ sub wrap_body {
           wrap("h1", undef, "Language-Report"),
           @body
         )
-      )
-    );
+      ),
+    qq{</html>};
 }
 
 sub stats_title_file_formatter {
   my ($report) = @_;
   my $title = $report->{orig_filename};
-  return qq{<a href="#$title">$title</a};
+  return qq{<a href="#$title">$title</a>};
 }
 
 sub stats_title_lang_formatter {
   my ($report) = @_;
   my $lang = $report->{lang};
-  return qq{<a href="report_$lang.html">$lang</a};
+  return qq{<a href="report_$lang.html">$lang</a>};
 }
-
-
 
 sub format_stats {
   my ($title_sub, @reports) = @_;
@@ -72,13 +73,13 @@ sub format_stats {
         wrap("thead", undef, 
           wrap("tr", undef, map { wrap("th", undef, $_) } @columns)
         ),
+        wrap("tfoot", undef,
+          wrap("tr", "total", format_stat("total", $total_report)),
+        ),
         wrap("tbody", undef,
           (map { wrap("tr", undef, 
             format_stat(&$title_sub($_), $_, "#".$_->{trans_filename})) } @reports
           ),
-        ),
-        wrap("tfoot", undef,
-          wrap("tr", "total", format_stat("total", $total_report)),
         ),
       ),
     );
