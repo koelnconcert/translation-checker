@@ -157,7 +157,7 @@ sub format_message {
 sub make_span {
   my ($key, $hash, $class) = @_;
   my $val = $hash->{$key} || "";
-  wrap("span", $class || $key, encode_entities($val));
+  wrap("span", $class || $key, $val);
 }
 
 sub wrap {
